@@ -13,10 +13,16 @@ classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
 
 class DBStorage:
+    """
+    Database Storage Class
+    """
     __engine = None
     __session = None
 
     def __init__(self):
+        """
+        DBStorage class instances
+        """
         mysql_user = getenv("HBNB_MYSQL_USER")
         mysql_password = getenv("HBNB_MYSQL_PWD")
         mysql_host = getenv("HBNB_MYSQL_HOST")
@@ -27,9 +33,12 @@ class DBStorage:
                                       pool_pre_ping=True)
 
         if getenv('HBNB_ENV') == 'test':
-            Base.metadata.drop_all(self.__engine)
+            Base.metadata.drop_all(bind=self.__engine)
 
     def all(self, cls=None):
+        """
+        Dictionary of all objects
+        """
         objects = {}
         if cls:
             if type(cls) == str:
@@ -47,19 +56,35 @@ class DBStorage:
         return objects
 
     def new(self, obj):
+        """
+        Adds objects to the database in the current session
+        """
         self.__session.add(obj)
 
     def save(self):
+        """
+        Save object to the database in the current session
+        """
         self.__session.commit()
 
     def delete(self, obj=None):
+        """
+        Delete objets from current session
+        """
         if obj:
             self.__session.delete(obj)
 
     def reload(self):
+        """
+        Load objects from database
+        Create a new session
+        """
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(bind=self.__engine,
                                       expire_on_commit=False)
         Session = scoped_session(session_factory)
         self.__session = Session()
+    
+    def close(self):
+        self.__session.close()
 

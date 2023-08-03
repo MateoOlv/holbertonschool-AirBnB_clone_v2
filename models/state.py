@@ -5,6 +5,9 @@ from sqlalchemy.orm import relationship
 from models.base_model import BaseModel, Base
 
 class State(BaseModel, Base):
+    """
+    State
+    """
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
     
