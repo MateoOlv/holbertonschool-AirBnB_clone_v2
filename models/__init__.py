@@ -7,9 +7,6 @@ from models.city import City
 import os
 
 storageType = os.getenv('HBNB_TYPE_STORAGE')
-storage = FileStorage()
-storage.reload()
-
 
 if os.getenv('HBNB_TYPE_STORAGE') == 'db':
     from models.engine.db_storage import DBStorage
@@ -17,3 +14,4 @@ if os.getenv('HBNB_TYPE_STORAGE') == 'db':
 else:
     from models.engine.file_storage import FileStorage
     storage = FileStorage()
+storage.reload()
