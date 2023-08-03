@@ -41,4 +41,13 @@ class BaseModel:
                           (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
+<<<<<<< HEAD
         return dictionary
+=======
+        return dictionary
+        
+    def delete(self):
+        """Deletes current instance"""
+        from models import storage
+        storage.delete(self)
+>>>>>>> d5311cc94e86f9e72184cc1697d48024b4df0af5
