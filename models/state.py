@@ -1,8 +1,11 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy.orm import relationship
+from models.base_model import BaseModel
 from models.base_model import BaseModel, Base
+import sqlalchemy as db
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
+
 
 class State(BaseModel, Base):
     """
@@ -10,14 +13,23 @@ class State(BaseModel, Base):
     """
     __tablename__ = 'states'
     name = Column(String(128), nullable=False)
-    
-    if models.storage_type == 'db':
-        cities = relationship("City", backref="state", cascade="all, delete-orphan")
-    elif models.storage_type == 'file':
-        @property
-        def cities(self):
-            city_list = []
-            for city in models.storage.all(City).values():
-                if city.state_id == self.id:
-                    city_list.append(city)
-            return city_list
+    cities = relationship("City", 
+    cascade="all, delete, delete-orphan", backref="state")
+
+    @property
+    def cities(self):
+        """"Returns cities that share state.id"""
+        from models import storage
+        import shlex
+
+        citiesInState = []
+        result = []
+        for key in storage.all():
+            city = key.replace('.', ' ')
+            city = shlex.split(city)
+            if city[0] == "City":
+                citiesInState.append(storage.all[key])
+        for cities in citiesInState:
+            if cities.state_id == self.id:
+                result.append(cities)
+        return result
