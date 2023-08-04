@@ -1,7 +1,7 @@
 from os import getenv
+from models.base_model import BaseModel, Base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
-from models.base_model import BaseModel, Base
 from models.state import State
 from models.city import City
 from models.user import User
@@ -25,7 +25,7 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        from models import classes
+        from console import classes
         obj_dict = {}
         if cls:
             if type(cls) == str:
@@ -39,14 +39,7 @@ class DBStorage:
                     key = f"{obj.__class__.__name__}.{obj.id}"
                     obj_dict[key] = obj
         return obj_dict
-    """
-    def all(self, cls=None):
-        if cls is None:
-            cls_list = self.__classes.values()
-        elif isinstance(cls, str):
-            cls = self.__classes.get(cls, None)
-            cls_list = [cls] if cls else []
-    """
+
     def new(self, obj):
         self.__session.add(obj)
 
