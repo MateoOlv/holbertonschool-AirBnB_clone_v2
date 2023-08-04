@@ -1,7 +1,14 @@
 #!/usr/bin/python3
 """This module defines a class to manage file storage for hbnb clone"""
 import json
+from datetime import datetime
 
+"""custom JSON encoder to handle the datetime object"""
+class CustomJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, datetime):
+            return obj.isoformat()
+        return super().default(obj)
 
 class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
@@ -29,7 +36,7 @@ class FileStorage:
             temp.update(FileStorage.__objects)
             for key, val in temp.items():
                 temp[key] = val.to_dict()
-            json.dump(temp, f)
+            json.dump(temp, f, cls=CustomJSONEncoder)
 
     def delete(self, obj=None):
         """Delete obj from __objects"""
@@ -54,13 +61,12 @@ class FileStorage:
                     'Review': Review
                   }
         try:
-            print("File Storage:") #debuggear
             temp = {}
             with open(FileStorage.__file_path, 'r') as f:
                 temp = json.load(f)
-                print(key) # para debuggear borrar luego
-                print(value)
                 for key, val in temp.items():
-                    self.all()[key] = classes[val['__class__']](**val)
+                    obj = classes[val['__class__']](**val)
+                    self.new(obj)
+                    print(FileStorage.__objects)
         except FileNotFoundError:
             pass
