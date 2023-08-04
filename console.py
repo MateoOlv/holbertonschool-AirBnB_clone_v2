@@ -119,12 +119,10 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
-
         class_name = args_list[0]
         if class_name not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-
         new_instance = HBNBCommand.classes[args_list[0]]()
         if len(args_list) > 1:
             properties = {}
