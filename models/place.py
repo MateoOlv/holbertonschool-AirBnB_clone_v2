@@ -6,13 +6,6 @@ from sqlalchemy import Column, String, ForeignKey, Float, Integer
 from sqlalchemy.orm import relationship
 
 
-if getenv("HBNB_TYPE_STORAGE") == "db":
-    metadata = Base.metadata
-    place_amenity = Table("place_amenity", metadata,
-                          Column("place_id", String(60), ForeignKey("places.id"),
-                                 primary_key=True, nullable=False),
-                          Column("amenity_id", String(60), ForeignKey("amenities.id"),
-                                 primary_key=True, nullable=False))
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
@@ -53,21 +46,3 @@ class Place(BaseModel, Base):
                 if self.id == element.place_id:
                     results.append(storage.all(Review)[element])
             return results
-
-        @property
-        def amenities(self):
-            from models.amenity import Amenity
-            from models import storage
-
-            results = []
-            for amenity in storage.all(Amenity).values():
-                if amenity.id in self.amenity_ids:
-                    results.append(amenity)
-            return results
-
-        @amenities.setter
-        def amenities(self, obj):
-            from models.amenity import Amenity
-
-            if isinstance(obj, Amenity):
-                self.amenity_ids.append(obj.id)
