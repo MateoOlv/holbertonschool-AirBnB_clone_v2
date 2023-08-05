@@ -5,13 +5,11 @@ from os import getenv
 from sqlalchemy import Column, String, ForeignKey, Float, Integer
 from sqlalchemy.orm import relationship
 
-env = getenv("HBNB_TYPE_STORAGE")
-
 
 class Place(BaseModel, Base):
     """ A place to stay """
     __tablename__ = 'places'
-    if env == "db":
+    if getenv("HBNB_TYPE_STORAGE") == "db":
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
         name = Column(String(128), nullable=False)
