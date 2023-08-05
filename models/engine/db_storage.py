@@ -21,6 +21,7 @@ class DBStorage:
     """
     __engine = None
     __session = None
+    __objects = {}
 
     def __init__(self):
         """
@@ -40,24 +41,20 @@ class DBStorage:
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
-        """Query on the current database session"""
-        obj = {}
         if cls:
-            cls = self.orm_mapped_classes[cls]
-            result = self.__session.query(cls).all()
-            for item in result:
-                key = "{}.{}".format(item.__class__.__name__, item.id)
-                obj[key] = item
+            key = '{}.{}'.format(cls.__name__, cls.id)
+            obj_dict = {key: cls for cls in self.__session.query(cls).all()}
         else:
-            for cls in self.orm_mapped_classes.values():
-                result = self.__session.query(cls).all()
-                for item in result:
-                    key = "{}.{}".format(item.__class__.__name__, item.id)
-                    obj[key] = item
-        return obj
+            obj_dict = {}
+            for cls in Base.__subclasses__():
+                key = '{}.{}'.format(cls.__name__, cls.id)
+                obj_dict.update({key: cls for cls in self.__session.query(cls).all()})
+
+        return obj_dict
 
     def new(self, obj):
         """Add the object to the current database session"""
+        key = '{}.{}'.format(obj.__class__.__name__, obj.id)
         self.__session.add(obj)
 
     def save(self):
@@ -66,7 +63,9 @@ class DBStorage:
 
     def delete(self, obj=None):
         """Delete from the current database session"""
-        self.__session.delete(obj)
+        if obj:
+            key = '{}.{}'.format(obj.__class__.__name__, obj.id)
+            del self.__objects[key]
 
     def reload(self):
         """Create all tables in the database and create the current database session"""
@@ -75,3 +74,6 @@ class DBStorage:
                                       expire_on_commit=False)
         Session = scoped_session(session_needed)
         self.__session = Session
+    
+    def close(self):
+        self.__session.close()
