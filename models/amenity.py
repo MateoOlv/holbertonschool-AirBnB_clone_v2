@@ -3,15 +3,8 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Table
 from sqlalchemy.orm import relationship
+from models.place import place_amenity
 from os import getenv
-
-if getenv("HBNB_TYPE_STORAGE") == "db":
-    metadata = Base.metadata
-    place_amenity = Table("place_amenity", metadata,
-                          Column("place_id", String(60), ForeignKey("places.id"),
-                                 primary_key=True, nullable=False),
-                          Column("amenity_id", String(60), ForeignKey("amenities.id"),
-                                 primary_key=True, nullable=False))
 
 
 class Amenity(BaseModel, Base):
