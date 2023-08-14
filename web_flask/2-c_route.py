@@ -33,7 +33,8 @@ C is fun
 
 @app.route("/c/<text>", strict_slashes=False)
 def C(text):
-    return (f"C {text}")
+    newtext = text.replace("_", " ")
+    return (f"C {newtext}")
 
 
 """
