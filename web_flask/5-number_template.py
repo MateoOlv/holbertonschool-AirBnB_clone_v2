@@ -51,7 +51,7 @@ def number(n):
 
 @app.route("/number_template/<int:n>", strict_slashes=False)
 def numbertemplate(n):
-    return numbertemplate('5-numbert.html', number=n)
+    return numbertemplate('5-numbert.html', n=n)
 
 
 """
