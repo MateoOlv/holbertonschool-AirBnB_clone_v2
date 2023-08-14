@@ -46,7 +46,7 @@ def Python(text):
 
 @app.route("/number/<n>", strict_slashes=False)
 def numb(n):
-    if n == int:
+    if n is int:
         return (f"{n} is a number")
 
 
