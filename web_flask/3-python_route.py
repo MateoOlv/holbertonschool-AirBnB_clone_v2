@@ -41,7 +41,7 @@ def C(text):
 @app.route("/python/<text>", strict_slashes=False)
 def Python(text):
     text = text.replace("_", " ")
-    return (f"Python {newtext}")
+    return (f"Python {text}")
 
 
 """
