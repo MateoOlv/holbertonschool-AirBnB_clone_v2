@@ -39,15 +39,14 @@ def C(text):
 
 @app.route("/python/", defaults={"text": "is cool"}, strict_slashes=False)
 @app.route("/python/<text>", strict_slashes=False)
-def Python(text):
+def python(text):
     text = text.replace("_", " ")
     return (f"Python {text}")
 
 
-@app.route("/number/<n>", strict_slashes=False)
-def numb(n):
-    if n is int:
-        return (f"{n} is a number")
+@app.route("/number/<int:n>", strict_slashes=False)
+def number(n):
+    return (f"{n} is a number")
 
 
 """
