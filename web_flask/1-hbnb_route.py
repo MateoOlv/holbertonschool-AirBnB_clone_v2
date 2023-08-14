@@ -16,8 +16,13 @@ def index():
     return ("Hello HBNB!")
 
 
+"""
+HBNB
+"""
+
+
 @app.route("/hbnb", strict_slashes=False)
-def index():
+def HBNB():
     return ("HBNB")
 
 
